@@ -2,14 +2,11 @@
 
 use App\Db\Producto;
 
-
-
 session_start();
-
-
 
 require_once __DIR__ . "/../vendor/autoload.php";
 $productos = Producto::read();
+
 ?>
 
 <!DOCTYPE html>
@@ -28,12 +25,12 @@ $productos = Producto::read();
     <title>Listado de productos</title>
 </head>
 
-<bod style="background-color:beige">
+<body style="background-color:beige">
     <h1 class="flex justify-center font-bold text-blue-800 m-10 text-xl">LISTADO DE PRODUCTOS</h1>
     <div class="container p-12 mx-auto">
         <div class="flex flex-row-reverse mb-3">
             <a href="create.php" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-add mr-2"></i>Crear artículo
+                <i class="fas fa-add mr-2"></i>Crear nuevo producto
             </a>
         </div>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -68,11 +65,10 @@ $productos = Producto::read();
                     </td>
                     <td class="px-6 py-4" whitespace-nowrap>
                          <form action="delete.php" method="POST">
-                         <input type="hidden" name="codigo" value="{$producto->codigo}"/>
-                            <a href="detalle.php?codigo={$producto->codigo}"><i class="fas fa-info text-blue-600 mr-2"></i></a>
-                            <a href="update.php?codigo={$producto->codigo}"><i class="fa-solid fa-file-pen" style="color: #b1b941; mr-2"></i></a>
-                            <button type="submit"><i class="fas fa-trash text-red-600"></i></button>
-
+                            <input type="hidden" name="codigo" value="{$producto->codigo}"/>
+                                <a href="detalle.php?codigo={$producto->codigo}"><i class="fas fa-info text-blue-600 mr-2"></i></a>
+                                <a href="update.php?codigo={$producto->codigo}"><i class="fa-solid fa-file-pen" style="color: #b1b941; mr-2"></i></a>
+                                <button type="submit"><i class="fas fa-trash text-red-600"></i></button>
                         </form>
                     </td>
                 </tr>
@@ -84,6 +80,21 @@ $productos = Producto::read();
             </table>
         </div>
     </div>
-</bod>
+    <?php
+    if (isset($_SESSION['mensajeExito'])) {
+        echo <<<TXT
+    <script>
+    Swal.fire({
+        icon: 'success',
+        title: '{$_SESSION['mensajeExito']}',
+        showConfirmButton: false,
+        timer: 1500
+    })
+    </script>
+    TXT;
+        unset($_SESSION['mensajeExito']);
+    }
+    ?>
+</body>
 
 </html>

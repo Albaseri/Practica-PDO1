@@ -21,15 +21,13 @@ class Producto extends Conexion
 
     public function create()
     {
-
-        $q = "insert into producto(codigo, nombre, precio) values (:c,:n,:p)";
+        $q = "insert into producto(nombre, precio) values (:n,:p)";
         $stmt = parent::$conexion->prepare($q);
 
         try {
             $stmt->execute([
-                ':c' => $this->codigo,
                 ':n' => $this->nombre,
-                ':cp' => $this->precio,
+                ':p' => $this->precio,
 
             ]);
         } catch (PDOException $ex) {
@@ -52,18 +50,61 @@ class Producto extends Conexion
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function update()
+    public function update($codigo)
     {
+
+        $q = "update producto set nombre=:n, precio=:p where codigo=:c";
+        $stmt = parent::$conexion->prepare($q);
+        try {
+            $stmt->execute([
+                ':n' => $this->nombre,
+                ':p' => $this->precio,
+                ':c' => $codigo
+            ]);
+        } catch (PDOException $ex) {
+            die("Error al crear un producto" . $ex->getMessage());
+        }
+        parent::$conexion = null;
     }
 
-    public function delete()
+    public static function delete($codigo)
     {
+        //Creo la conexión
+        parent::setConexion();
+        $q = "delete from producto where codigo=:c";
+
+        $stmt = parent::$conexion->prepare($q);
+        try {
+            $stmt->execute([
+                ':c' => $codigo
+            ]);
+        } catch (PDOException $ex) {
+            die("Error al eliminar el producto" . $ex->getMessage());
+        }
+        parent::$conexion = null;
     }
 
 
     //___________________OTROS MÉTODOS___________________
 
+public static function encontrarProducto($codigo){
+    parent::setConexion();
+    $q="select * from producto where codigo=:c";
+    $stmt=parent::$conexion->prepare($q);
+    try {
+        $stmt->execute([
+            ":c"=>$codigo
+        ]);
+    } catch (PDOException $ex) {
+        die("Error al encontrar el producto").$ex->getMessage();
+    }
+    parent::$conexion=null;
+    return $stmt->fetch(PDO::FETCH_OBJ);
+}
 
+
+
+    //________________SETTERS_________________
 
 
     /**
