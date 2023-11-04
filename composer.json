@@ -1,0 +1,20 @@
+{
+    "name": "albit/practica-pdo1",
+    "description": "Practica PDO 1",
+    "type": "project",
+    "license": "free",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Albaseri",
+            "email": "albitaseri@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}
