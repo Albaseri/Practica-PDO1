@@ -28,7 +28,7 @@ $productos = Producto::read();
     <title>Listado de productos</title>
 </head>
 
-<body style="background-color:beige">
+<body style="background-color:antiquewhite">
 
     <h1 class="flex justify-center font-bold text-blue-800 m-10 text-xl">LISTADO DE PRODUCTOS</h1>
 

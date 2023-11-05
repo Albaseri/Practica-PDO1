@@ -67,7 +67,7 @@ if (isset($_POST['btn'])) {
         <title>Editar producto</title>
     </head>
 
-    <body style="background-color:beige">
+    <body style="background-color:antiquewhite">
         <h1 class="flex justify-center font-bold text-blue-800 m-5 text-xl mt-20">EDITAR PRODUCTO</h1>
         <div class="container p-12 mx-auto">
             <div class="w-3/4 mx-auto p-6 rounded-xl bg-gray-400">
