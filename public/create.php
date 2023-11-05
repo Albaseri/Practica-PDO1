@@ -3,6 +3,7 @@
 use App\Db\Producto;
 use App\Utils\Validar;
 
+// Iniciamos sesión
 session_start();
 
 require_once __DIR__ . "/../vendor/autoload.php";
@@ -27,18 +28,17 @@ if (isset($_POST['btn'])) {
     }
 
     //Creamos un nuevo producto
-
     (new Producto)
         ->setNombre($nombre)
         ->setPrecio($precio)
         ->create();
 
     //Guarda mensaje de éxito 
-
     $_SESSION['mensajeExito'] = "El producto se ha creado correctamente.";
 
     //Volvemos a inicio
     header('location:inicio.php');
+
 } else {
 ?>
 
@@ -60,10 +60,10 @@ if (isset($_POST['btn'])) {
     </head>
 
     <body style="background-color:beige">
-        <h1 class="flex justify-center font-bold text-blue-800 m-5 text-xl">CREAR PRODUCTO</h1>
+        <h1 class="flex justify-center font-bold text-blue-800 m-5 text-xl mt-20">CREAR PRODUCTO</h1>
         <div class="container p-12 mx-auto">
             <div class="w-3/4 mx-auto p-6 rounded-xl bg-gray-400">
-                <!-- Si vamos a subir archivos hay que poner el enctype="multipart/form-data" en el formulario. -->
+
                 <form method="POST" action="<?php echo $_SERVER['PHP_SELF'] ?>" enctype="multipart/form-data">
                     <div class="mb-6">
                         <label for="nombre" class="block mb-2 text-m font-bold text-gray-900 dark:text-white mb-4">
@@ -83,11 +83,9 @@ if (isset($_POST['btn'])) {
                         ?>
                     </div>
 
-
-
                     <div class="flex flex-row-reverse">
                         <button type="submit" name="btn" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <i class="fa-solid fa-plus mr-2" style="color:white;" ></i></i>CREAR
+                            <i class="fa-solid fa-plus mr-2" style="color:white;"></i></i>CREAR
                         </button>
                         <button type="reset" class="mr-2 text-white bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-blue-800">
                             <i class="fas fa-paintbrush mr-2"></i>LIMPIAR

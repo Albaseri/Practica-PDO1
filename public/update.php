@@ -5,41 +5,50 @@ use App\Utils\Validar;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+// Si el codigo no está en la URL, vuelve a inicio
 if (!isset($_GET['codigo'])) {
     header("Location:inicio.php");
     die();
 }
 
+// Iniciamos sesión
 session_start();
 
+// Obtenemos el valor del parámetro código
 $codigo = $_GET['codigo'];
+
+// Buscamos el producto correspondiente al código en la BD
 $productoCod = Producto::encontrarProducto($codigo);
 
-
+// Si le hemos dado al btn, procesamos todo
 if (isset($_POST['btn'])) {
     //Recogemos y sanitizamos
     $nombre = ucwords(htmlspecialchars(trim($_POST['nombre'])));
     $precio = (float)(trim($_POST['precio']));
 
     $errores = false;
-    //Validamos campos
+
+    //Validamos campos utilizando la clase Validar y sus métodos
     (Validar::errorLongitudCampo("nombre", $nombre, 5) ? $errores = true :  "");
     (Validar::errorPrecio("precio", $precio, 5, 1500) ? $errores = true : "");
 
-
+    // Si hay errores, redirigimos al usuario a la misma página ($_SERVER['PHP_SELF']) con el parámetro codigo
     if ($errores) {
         header("Location:{$_SERVER['PHP_SELF']}?codigo=$codigo");
         die();
     }
 
+    // Creamos nuevo producto
     (new Producto)
         ->setNombre($nombre)
         ->setPrecio($precio)
         ->update($codigo); //le paso el código del producto
 
-    $_SESSION['mensajeExisto'] = "Producto actualizado correctamente.";
+    // Si se ha podido actualizar, muestro mensaje y me lleva a inicio
+    $_SESSION['mensajeExito'] = "Producto actualizado correctamente.";
     header("Location:inicio.php");
 } else {
+
 ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -55,11 +64,11 @@ if (isset($_POST['btn'])) {
         <!-- SweetAlert2 CDN -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <title>Crear producto</title>
+        <title>Editar producto</title>
     </head>
 
     <body style="background-color:beige">
-        <h1 class="flex justify-center font-bold text-blue-800 m-5 text-xl">EDITAR PRODUCTO</h1>
+        <h1 class="flex justify-center font-bold text-blue-800 m-5 text-xl mt-20">EDITAR PRODUCTO</h1>
         <div class="container p-12 mx-auto">
             <div class="w-3/4 mx-auto p-6 rounded-xl bg-gray-400">
                 <form method="POST" action="<?php echo $_SERVER['PHP_SELF'] . "?codigo=$codigo" ?>">
@@ -80,8 +89,6 @@ if (isset($_POST['btn'])) {
                         Validar::mostrarError("precio");
                         ?>
                     </div>
-
-
 
                     <div class="flex flex-row-reverse">
                         <button type="submit" name="btn" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

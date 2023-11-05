@@ -1,5 +1,6 @@
 <?php
 
+// Clase que permite interactuar con la tabla producto
 namespace App\Db;
 
 use PDOException;
@@ -7,17 +8,25 @@ use PDO;
 
 class Producto extends Conexion
 {
+    // Atributos que representan los datos de una tabla
     private int $codigo;
     private string $nombre;
     private float $precio;
 
-
+    // Método constructor que llama al constructor de la clase padre Conexión para establecer la conexión a la BD si no existe
     public function __construct()
     {
         parent::__construct();
     }
 
-    //___________________________________CRUD________________________________________________
+    //________________________________________________________________________CRUD__________________________________________________________________________________
+
+
+    //Pasos a seguir: 
+    // 1. Creo la consulta. Parametrizamos con values cuando sea necesario
+    // 2. Preparo la consulta con la variable $stmt
+    // 3. Ejecuto la consulta. Si hay parámetros, "cada oveja con su pareja"
+    // 4. Cierro la conexión
 
     public function create()
     {
@@ -36,20 +45,24 @@ class Producto extends Conexion
         parent::$conexion = null;
     }
 
+    // Método read que devuelve los registros de la tabla
     public static function read()
     {
         parent::setConexion();
+
         $q = "select * from producto order by codigo desc";
         $stmt = parent::$conexion->prepare($q);
+
         try {
             $stmt->execute();
         } catch (PDOException $ex) {
             die("Error al leer producto") . $ex->getMessage();
         }
         parent::$conexion = null;
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $stmt->fetchAll(PDO::FETCH_OBJ); // Devuelve todos los registros. FETCH_OBJ para la notación de objetos con flechas
     }
 
+    // Método update para actualizar un producto 
     public function update($codigo)
     {
 
@@ -67,13 +80,14 @@ class Producto extends Conexion
         parent::$conexion = null;
     }
 
+    // Método delete para borrar un producto dado su código
     public static function delete($codigo)
     {
-        //Creo la conexión
         parent::setConexion();
-        $q = "delete from producto where codigo=:c";
 
+        $q = "delete from producto where codigo=:c";
         $stmt = parent::$conexion->prepare($q);
+      
         try {
             $stmt->execute([
                 ':c' => $codigo
@@ -85,26 +99,29 @@ class Producto extends Conexion
     }
 
 
-    //___________________OTROS MÉTODOS___________________
+    //__________________________________________________________________OTROS MÉTODOS_____________________________________________________________________________
 
-public static function encontrarProducto($codigo){
-    parent::setConexion();
-    $q="select * from producto where codigo=:c";
-    $stmt=parent::$conexion->prepare($q);
-    try {
-        $stmt->execute([
-            ":c"=>$codigo
-        ]);
-    } catch (PDOException $ex) {
-        die("Error al encontrar el producto").$ex->getMessage();
+    // Método para encontrar un producto dado su código
+    public static function encontrarProducto($codigo)
+    {
+        parent::setConexion();
+
+        $q = "select * from producto where codigo=:c";
+        $stmt = parent::$conexion->prepare($q);
+        try {
+            $stmt->execute([
+                ":c" => $codigo
+            ]);
+        } catch (PDOException $ex) {
+            die("Error al encontrar el producto") . $ex->getMessage();
+        }
+        parent::$conexion = null;
+        return $stmt->fetch(PDO::FETCH_OBJ); //fetch devuelve la primera fila
     }
-    parent::$conexion=null;
-    return $stmt->fetch(PDO::FETCH_OBJ);
-}
 
 
 
-    //________________SETTERS_________________
+    //_______________________________________________________________________SETTERS__________________________________________________________________________________
 
 
     /**

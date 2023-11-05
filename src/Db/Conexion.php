@@ -1,5 +1,6 @@
 <?php
 
+// Esta clase controla la conexión a una BD mysql utilizando PDO
 namespace App\Db;
 
 use Dotenv\Dotenv;
@@ -8,9 +9,10 @@ use PDOException;
 
 class Conexion
 {
-
+    // Propiedad estática que almacena la conexión a la BD
     protected static $conexion;
 
+    // Constructor de la clase que llama al método setConexión() para establecer a la conexión
     public function __construct()
     {
         self::setConexion();
@@ -18,7 +20,7 @@ class Conexion
 
     protected static function setConexion()
     {
-        //comprobamos si la conexión existe
+        // Comprobamos si la conexión existe
 
         if (self::$conexion != null) return;
 
@@ -32,14 +34,17 @@ class Conexion
         $pass = $_ENV['PASS'];
         $host = $_ENV['HOST'];
 
-        //dns descriptor
+        // Creamos el DSN para conectarnos a una BD
         $dsn = "mysql:dbname=$db;host=$host; charset=utf8mb4";
-        $options = [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION];
 
+        // Configuramos opciones de PDO
+        $options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
+
+        // Creo el objeto tipo PDO con el DSN, usuario, contraseña y opciones. 
         try {
-            self::$conexion = new PDO($dsn, $user,$pass,$options);
+            self::$conexion = new PDO($dsn, $user, $pass, $options);
         } catch (PDOException $ex) {
-            die("Error en la conexión" . $ex->getMessage());
+            die("Error en la conexión" . $ex->getMessage()); // Muestro error si hay fallo al conectar
         }
     }
 }
